@@ -3,13 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ForeignKey,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../users/users.entity';
+import { Comment } from '../comments/comments.entity';
 
 @Entity('posts')
 export class Post {
@@ -29,14 +30,6 @@ export class Post {
   @ApiProperty({ description: '조회수', default: 0 })
   viewCount: number;
 
-  // (사용자[User] : 게시물[Post]) (1:N)
-  @ManyToOne(() => User, (user) => user.posts, {
-    onDelete: 'CASCADE',
-    eager: false, // 조회 시 자동으로 JOIN 하지 않음 (성능 최적화)
-  })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
   @Column({ name: 'user_id', nullable: true })
   @ApiProperty({ description: '작성자 User ID' })
   userId: number;
@@ -48,4 +41,18 @@ export class Post {
   @UpdateDateColumn({ name: 'updated_at' })
   @ApiProperty({ description: '수정일' })
   updatedAt: Date;
+
+  // --- relations ---
+
+  // (사용자[User] : 게시물[Post]) (1:N)
+  @ManyToOne(() => User, (user) => user.posts, {
+    onDelete: 'CASCADE',
+    eager: false, // 조회 시 자동으로 JOIN 하지 않음 (성능 최적화)
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  // (게시물[Post] : 댓글[Comment]) (1: N)
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 }

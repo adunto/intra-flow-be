@@ -14,6 +14,9 @@ export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
 }
+import { UserRole } from 'src/common/common.enums';
+import { Comment } from '../comments/comments.entity';
+import { Like } from '../likes/likes.entity';
 
 @Entity('users')
 export class User {
@@ -63,4 +66,12 @@ export class User {
   // --- 작성한 게시물 ---
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  // --- 작성한 댓글 ---
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
+
+  // --- 좋아요 ---
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 }

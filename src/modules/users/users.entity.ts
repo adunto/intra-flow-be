@@ -9,11 +9,6 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Post } from '../posts/posts.entity';
-
-export enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
 import { UserRole } from 'src/common/common.enums';
 import { Comment } from '../comments/comments.entity';
 import { Like } from '../likes/likes.entity';

@@ -9,9 +9,10 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Post } from '../posts/posts.entity';
-import { UserRole } from 'src/common/common.enums';
+
 import { Comment } from '../comments/comments.entity';
 import { Like } from '../likes/likes.entity';
+import { UserRole } from 'src/common/common.enums';
 
 @Entity('users')
 export class User {

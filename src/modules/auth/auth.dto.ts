@@ -8,11 +8,19 @@ import {
 } from 'class-validator';
 
 export class RegisterDto {
-  @ApiProperty({ description: '이메일', example: 'user@example.com' })
+  @ApiProperty({
+    description: '이메일',
+    example: 'user@example.com',
+    required: true,
+  })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ description: '비밀번호 (최소 6자)', example: 'password123@' })
+  @ApiProperty({
+    description: '비밀번호 (최소 6자)',
+    example: 'password123@',
+    minLength: 6,
+  })
   @MinLength(6)
   @Matches(/^[a-zA-Z0-9!@#$%^&*]*$/, {
     message:

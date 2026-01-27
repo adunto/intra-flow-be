@@ -9,7 +9,7 @@ services:
     # command: redis-server --requirepass "my_password" # 비밀번호 설정 시
 
   postgres:
-    image: postgres:latest
+    image: postgres:17-alpine
     container_name: postgres_db
     ports:
       - '5432:5432'

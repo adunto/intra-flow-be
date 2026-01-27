@@ -57,3 +57,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 *.lock
 pnpm-lock.yaml
+
+# postgres
+postgres-data

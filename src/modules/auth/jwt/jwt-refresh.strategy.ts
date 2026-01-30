@@ -3,14 +3,22 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from './jwt.strategy';
-import { jwtConstants } from './constants';
+import { ConfigService } from '@nestjs/config';
+
+export type ValidateRefresh = JwtPayload & { refreshToken: string };
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor() {
+  constructor(private configService: ConfigService) {
+    const refreshSecret = configService.get<string>('JWT_REFRESH_SECRET');
+
+    if (!refreshSecret) {
+      throw new Error('Error: env file 내에 JWT_REFRESH_SECRET 값 오류');
+    }
+
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
@@ -19,15 +27,12 @@ export class JwtRefreshStrategy extends PassportStrategy(
         },
       ]),
       ignoreExpiration: false,
-      secretOrKeyProvider: (request, rawJwtToken, done) => {
-        const secret = jwtConstants.refreshTokenSecret;
-        done(null, secret);
-      },
+      secretOrKey: refreshSecret,
       passReqToCallback: true,
     });
   }
 
-  validate(req: Request, payload: JwtPayload) {
+  validate(req: Request, payload: JwtPayload): ValidateRefresh {
     const refreshToken = req.cookies?.refresh_token as string;
     return { ...payload, refreshToken };
   }

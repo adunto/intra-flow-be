@@ -20,7 +20,8 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(process.env.PORT ?? 8000);
   app.use(cookieParser());
+
+  await app.listen(process.env.PORT ?? 8000);
 }
 bootstrap();

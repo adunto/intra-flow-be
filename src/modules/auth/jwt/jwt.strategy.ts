@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/modules/users/users.service';
-import { jwtConstants } from './constants';
+import { ConfigService } from '@nestjs/config';
 
 export interface JwtPayload {
   sub: number;
@@ -13,14 +13,19 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private configService: ConfigService,
+  ) {
+    const accessSecret = configService.get<string>('JWT_ACCESS_SECRET');
+
+    if (!accessSecret) {
+      throw new Error('Error: env file 내에 JWT_ACCESS_SECRET 값 오류');
+    }
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKeyProvider: (request, rawJwtToken, done) => {
-        const secret = jwtConstants.accessTokenSecret;
-        done(null, secret);
-      },
+      secretOrKey: accessSecret,
     });
   }
 

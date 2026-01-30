@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -22,7 +23,8 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
   ) {}
 
   // 회원가입
@@ -72,6 +74,39 @@ export class AuthService {
     return this.getTokens(user.id, user.email);
   }
 
+  // 토큰 재발급
+  async refreshTokens(userId: number, incomingRefreshToken: string) {
+    // Redis 조회
+    const storedRefreshToken = await this.cacheManager.get<string>(
+      `refresh_token:${userId}`,
+    );
+
+    // Redis에 토큰이 존재하지 않는 경우
+    if (!storedRefreshToken) {
+      throw new ForbiddenException(
+        '로그인이 만료되었습니다. 다시 로그인해주세요.',
+      );
+    }
+
+    // 토큰 일치 여부 확인
+    const isMatch = await bcrypt.compare(
+      incomingRefreshToken,
+      storedRefreshToken,
+    );
+    if (!isMatch) {
+      throw new ForbiddenException('유효하지 않은 토큰입니다. (Access Denied)');
+    }
+
+    // 유저 존재 여부 재확인
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new ForbiddenException('존재하지 않는 사용자입니다.');
+    }
+
+    // 새 토큰 발급
+    return this.getTokens(user.id, user.email);
+  }
+
   // 토큰 생성 (Access + Refresh)
   async getTokens(userId: number, email: string) {
     const [accessToken, refreshToken] = await Promise.all([
@@ -79,7 +114,7 @@ export class AuthService {
       this.jwtService.signAsync(
         { sub: userId, email },
         {
-          secret: this.configService.get('JWT_ACCESS_SECRET'),
+          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
           expiresIn: '15m',
         },
       ),
@@ -87,7 +122,7 @@ export class AuthService {
       this.jwtService.signAsync(
         { sub: userId, email },
         {
-          secret: this.configService.get('JWT_REFRESH_SECRET'),
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
           expiresIn: '7d',
         },
       ),

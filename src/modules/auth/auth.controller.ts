@@ -1,8 +1,19 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { type Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { type ValidateRefresh } from './jwt/jwt-refresh.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +38,35 @@ export class AuthController {
     // 유저 검증 validateUser
     const { accessToken, refreshToken } =
       await this.authService.login(loginDto);
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return { accessToken };
+  }
+
+  @ApiOperation({ summary: 'AccessToken 재발급' })
+  @ApiCookieAuth()
+  @ApiResponse({ status: 200, description: '재발급 성공' })
+  @ApiResponse({
+    status: 401,
+    description: 'Refresh Token이 없거나 유효하지 않음',
+  })
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @CurrentUser() user: ValidateRefresh,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.refreshTokens(
+      user.sub,
+      user.refreshToken,
+    );
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,

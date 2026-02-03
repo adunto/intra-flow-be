@@ -17,7 +17,7 @@ async function bootstrap() {
     .setTitle('Intra Flow API')
     .setDescription('인트라 플로우 API 설명서')
     .setVersion('v_1.0')
-    // .addBearerAuth()
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

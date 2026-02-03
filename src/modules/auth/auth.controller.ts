@@ -13,7 +13,7 @@ import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { type ValidateRefresh } from './jwt/jwt-refresh.strategy';
+import { type ValidateUser } from './jwt/jwt-refresh.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -60,7 +60,7 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
-    @CurrentUser() user: ValidateRefresh,
+    @CurrentUser() user: ValidateUser,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.refreshTokens(

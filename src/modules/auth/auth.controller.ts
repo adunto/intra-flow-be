@@ -8,12 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './auth.dto';
+import { LoginDto, SignupDto } from './auth.dto';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { type ValidateRefresh } from './jwt/jwt-refresh.strategy';
+import { type ValidateUser } from './jwt/jwt-refresh.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -22,9 +22,9 @@ export class AuthController {
   @ApiOperation({ summary: '회원가입' })
   @ApiResponse({ status: 201, description: '회원가입 성공' })
   @ApiResponse({ status: 409, description: '이미 존재하는 이메일' })
-  @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  @Post('signup')
+  async register(@Body() signupDto: SignupDto) {
+    return this.authService.signup(signupDto);
   }
 
   @ApiOperation({ summary: '로그인' })
@@ -60,7 +60,7 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
-    @CurrentUser() user: ValidateRefresh,
+    @CurrentUser() user: ValidateUser,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.refreshTokens(

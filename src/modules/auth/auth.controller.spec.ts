@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { TestingModule, Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './auth.dto';
+import { LoginDto, SignupDto } from './auth.dto';
 
 const mockAuthService = {
   register: jest.fn(),
@@ -45,7 +45,7 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('회원가입 테스트', async () => {
-      const registerDto: RegisterDto = {
+      const registerDto: SignupDto = {
         email: 'test@example.com',
         password: 'password123!',
         username: 'tester',

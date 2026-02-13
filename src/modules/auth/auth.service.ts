@@ -10,7 +10,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto, RegisterDto } from './auth.dto';
+import { LoginDto, SignupDto } from './auth.dto';
 import { Repository } from 'typeorm';
 import { User } from '../users/users.entity';
 import * as bcrypt from 'bcrypt';
@@ -28,8 +28,8 @@ export class AuthService {
   ) {}
 
   // 회원가입
-  async register(registerDto: RegisterDto): Promise<void> {
-    const { email, password, username } = registerDto;
+  async signup(signupDto: SignupDto): Promise<void> {
+    const { email, password, username } = signupDto;
 
     const existingUser = await this.userRepository.findOne({
       where: { email },

@@ -7,6 +7,8 @@ import * as Joi from 'joi';
 import { AuthModule } from './modules/auth/auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-ioredis';
+import { UsersModule } from './modules/users/users.module';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -65,11 +67,13 @@ import * as redisStore from 'cache-manager-ioredis';
         host: configService.get<string>('REDIS_HOST'),
         port: configService.get<number>('REDIS_PORT'),
         password: configService.get<string>('REDIS_PASSWORD'),
-        ttl: 600, // 기본 캐시 시간 (필요 시 오버라이드 가능)
+        ttl: 600,
       }),
     }),
 
     AuthModule,
+    UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

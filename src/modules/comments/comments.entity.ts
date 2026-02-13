@@ -23,13 +23,31 @@ export class Comment {
   @ApiProperty({ description: '댓글 내용' })
   content: string;
 
+  @Column({ type: 'int', default: 0, name: 'like_count' })
+  @ApiProperty({ description: '좋아요 개수', default: 0 })
+  likeCount: number;
+
+  // --- 타임 스탬프 ---
+
+  @CreateDateColumn({ name: 'created_at' })
+  @ApiProperty({ description: '작성일' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  @ApiProperty({ description: '수정일' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' }) // Soft Delete
+  @ApiProperty({ description: '삭제일', required: false })
+  deletedAt?: Date;
+
   // --- relations ---
 
   @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
-  @Column({ name: 'post_id' })
+  @Column({ name: 'post_id', type: 'bigint' })
   @ApiProperty({ description: '게시물 ID' })
   postId: string;
 
@@ -56,18 +74,4 @@ export class Comment {
 
   @OneToMany(() => Comment, (comment) => comment.parent)
   children: Comment[];
-
-  // --- Timestamps ---
-
-  @CreateDateColumn({ name: 'created_at' })
-  @ApiProperty({ description: '작성일' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  @ApiProperty({ description: '수정일' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at' }) // Soft Delete
-  @ApiProperty({ description: '삭제일', required: false })
-  deletedAt?: Date;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './users.service';
 import {
   ApiBearerAuth,
@@ -9,6 +9,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { User } from './users.entity';
+import { Post } from '../posts/posts.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -23,16 +24,18 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Get('profile')
-  async getProfile(@CurrentUser() user: User) {
-    const userInfo = await this.userService.findById(user.id);
-
-    if (!userInfo) {
-      throw new NotFoundException('존재하지 않는 사용자입니다.');
-    }
-
-    return userInfo;
+  getProfile(@CurrentUser() user: User) {
+    return user;
   }
 
   // 유저가 작성한 게시물 목록 조회 (GET)
-  
+  @ApiOperation({ summary: '내가 작성한 게시물 조회' })
+  @ApiResponse({ status: 200, description: '조회 성공', type: [Post] })
+  @ApiResponse({ status: 401, description: '인증되지 않음' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @Get('posts')
+  async getUserPosts(@CurrentUser() user: User) {
+    return this.userService.getUserPosts(user.id);
+  }
 }

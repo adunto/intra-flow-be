@@ -19,10 +19,11 @@ export class PostsService {
   async getAllPosts(): Promise<Post[]> {
     return this.postsRepository.find({
       order: { createdAt: 'DESC' }, // 최신순 정렬
-      relations: ['user'], // 작성자 정보 함께 조회
+      relations: ['user'], // 작성자 정보 함께 조회 (LEFT JOIN)
       select: {
         user: {
           id: true,
+          username: true,
           email: true,
         },
       },
@@ -33,11 +34,22 @@ export class PostsService {
   async getPostById(id: string): Promise<Post> {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations: ['user'],
+      relations: ['user', 'comments'],
+      select: {
+        user: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      },
     });
 
     if (!post) {
       throw new NotFoundException(`게시물(ID: ${id})을 찾을 수 없습니다.`);
+    }
+
+    if (post.deletedAt) {
+      throw new ForbiddenException(`해당 게시물은 삭제되었습니다. (ID: ${id})`);
     }
 
     await this.postsRepository.increment({ id }, 'viewCount', 1);
@@ -136,4 +148,8 @@ export class PostsService {
 
     return post;
   }
+
+  // --- Helper Methods ---
+
+  // --- 게시물 액션 (좋아요)
 }

@@ -17,7 +17,26 @@ export class Like {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @Column({
+    name: 'target_type',
+    type: 'enum',
+    enum: LikeTargetType,
+    default: LikeTargetType.POST,
+  })
+  @ApiProperty({
+    description: '대상 타입 (POST | COMMENT)',
+    enum: LikeTargetType,
+  })
+  targetType: LikeTargetType;
+
+  // --- 타임 스탬프 ---
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  // --- relations ---
+
+  @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -27,18 +46,4 @@ export class Like {
   @Column({ name: 'target_id', type: 'bigint' })
   @ApiProperty({ description: '대상 ID (Post ID or Comment ID)' })
   targetId: string;
-
-  @Column({
-    name: 'target_type',
-    type: 'enum',
-    enum: LikeTargetType,
-    default: LikeTargetType.POST,
-  })
-  @ApiProperty({ description: '대상 타입', enum: LikeTargetType })
-  targetType: LikeTargetType;
-
-  // --- Date ---
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
 }

@@ -46,6 +46,10 @@
 
 <img src="./public/architecture.png" />
 
+## ERD
+
+<img src="./public/ERD.png" />
+
 ## Project setup
 
 ```bash

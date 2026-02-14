@@ -4,10 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
   ConflictException,
-  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDto, SignupDto } from './auth.dto';
@@ -83,9 +83,12 @@ export class AuthService {
 
     // Redis에 토큰이 존재하지 않는 경우
     if (!storedRefreshToken) {
-      throw new ForbiddenException(
-        '로그인이 만료되었습니다. 다시 로그인해주세요.',
-      );
+      return {
+        success: false,
+        message: '로그인이 만료되었습니다. 다시 로그인해주세요.',
+        accessToken: null,
+        refreshToken: null,
+      };
     }
 
     // 토큰 일치 여부 확인
@@ -94,17 +97,37 @@ export class AuthService {
       storedRefreshToken,
     );
     if (!isMatch) {
-      throw new ForbiddenException('유효하지 않은 토큰입니다. (Access Denied)');
+      return {
+        success: false,
+        message: '유효하지 않은 토큰입니다. (Access Denied)',
+        accessToken: null,
+        refreshToken: null,
+      };
     }
 
     // 유저 존재 여부 재확인
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
-      throw new ForbiddenException('존재하지 않는 사용자입니다.');
+      return {
+        success: false,
+        message: '존재하지 않는 사용자입니다.',
+        accessToken: null,
+        refreshToken: null,
+      };
     }
 
     // 새 토큰 발급
-    return this.getTokens(user.id, user.email);
+    const { accessToken, refreshToken } = await this.getTokens(
+      user.id,
+      user.email,
+    );
+
+    return {
+      success: true,
+      message: '발급 성공',
+      accessToken,
+      refreshToken,
+    };
   }
 
   // 토큰 생성 (Access + Refresh)
@@ -137,5 +160,12 @@ export class AuthService {
     );
 
     return { accessToken, refreshToken };
+  }
+
+  // 토큰 삭제 (Refresh Token)
+  async deleteToken(userId: number): Promise<void> {
+    const cacheKey = `refresh_token:${userId}`;
+
+    await this.cacheManager.del(cacheKey);
   }
 }

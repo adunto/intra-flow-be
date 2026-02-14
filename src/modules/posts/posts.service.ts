@@ -70,14 +70,14 @@ export class PostsService {
     if (type.length > 0 && item) {
       qb.andWhere(
         new Brackets((innerQb: WhereExpressionBuilder) => {
-          if (type.includes('AUTHOR')) {
+          if (type.includes('TITLE')) {
             innerQb.orWhere('post.title LIKE :keyword', { keyword });
           }
           if (type.includes('CONTENT')) {
             innerQb.orWhere('post.content LIKE :keyword', { keyword });
           }
           if (type.includes('AUTHOR')) {
-            innerQb.orWhere('user.nickname LIKE :keyword', { keyword });
+            innerQb.orWhere('user.username LIKE :keyword', { keyword });
           }
         }),
       );

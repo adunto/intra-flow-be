@@ -43,8 +43,8 @@ export class PostsController {
   async searchPosts(@Query() searchPostDto: SearchPostDto) {
     // DTO가 자동으로 쿼리 스트링을 파싱합니다.
     return this.postsService.searchPosts({
-      type: searchPostDto.type,
-      item: searchPostDto.item,
+      searchType: searchPostDto.searchType,
+      searchItem: searchPostDto.searchItem,
     });
   }
 

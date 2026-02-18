@@ -59,7 +59,7 @@ export class PostsService {
 
   // 게시물 검색
   async searchPosts(search: SearchPostDto): Promise<Post[]> {
-    const { type, item } = search;
+    const { searchType: type, searchItem: item } = search;
     const keyword = `%${item}%`; // 부분 일치 검색
 
     const qb = this.postsRepository.createQueryBuilder('post');

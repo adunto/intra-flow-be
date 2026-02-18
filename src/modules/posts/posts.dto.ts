@@ -7,7 +7,7 @@ export class SearchPostDto {
     example: 'AUTHOR | TITLE | CONTENT',
     required: true,
   })
-  type: Array<'AUTHOR' | 'TITLE' | 'CONTENT'>;
+  searchType: Array<'AUTHOR' | 'TITLE' | 'CONTENT'>;
 
   @ApiProperty({
     description: '검색어',
@@ -15,7 +15,7 @@ export class SearchPostDto {
     required: true,
   })
   @IsString()
-  item: string;
+  searchItem: string;
 }
 
 export class CreatePostDto {

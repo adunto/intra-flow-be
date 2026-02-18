@@ -102,8 +102,8 @@ describe('PostController Test', () => {
     it('should return filtered posts based on search criteria', async () => {
       // Given: '제목 2'를 검색했을 때 2번째 게시물만 나온다고 가정
       const searchDto: SearchPostDto = {
-        type: ['TITLE'],
-        item: '제목 2',
+        searchType: ['TITLE'],
+        searchItem: '제목 2',
       };
 
       const filteredResult = [dummyPosts[1]]; // ID 2번 게시물
@@ -114,8 +114,8 @@ describe('PostController Test', () => {
 
       // Then
       expect(service.searchPosts).toHaveBeenCalledWith({
-        type: searchDto.type,
-        item: searchDto.item,
+        type: searchDto.searchType,
+        item: searchDto.searchItem,
       });
       expect(result).toHaveLength(1);
       expect(result[0].title).toContain('제목 2');

@@ -18,7 +18,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreatePostDto, SearchPostDto, UpdatePostDto } from './posts.dto';
+import {
+  CreatePostDto,
+  PaginationDto,
+  SearchPostDto,
+  UpdatePostDto,
+} from './posts.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { User } from '../users/users.entity';
@@ -32,8 +37,9 @@ export class PostsController {
   @ApiOperation({ summary: '전체 게시물 조회' })
   @ApiResponse({ status: 200, description: '조회 성공' })
   @Get()
-  async getAllPosts() {
-    return this.postsService.getAllPosts();
+  async getAllPosts(@Query() paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+    return this.postsService.getAllPosts(page, limit);
   }
 
   // 게시물 검색 (GET)
@@ -42,10 +48,7 @@ export class PostsController {
   @Get('search')
   async searchPosts(@Query() searchPostDto: SearchPostDto) {
     // DTO가 자동으로 쿼리 스트링을 파싱합니다.
-    return this.postsService.searchPosts({
-      searchType: searchPostDto.searchType,
-      searchItem: searchPostDto.searchItem,
-    });
+    return this.postsService.searchPosts(searchPostDto);
   }
 
   // 단일 게시물 상세 보기 (GET)

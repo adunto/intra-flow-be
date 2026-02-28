@@ -11,7 +11,7 @@ import { Post } from '../posts/posts.entity';
 import { CreateCommentDto, UpdateCommentDto } from './comments.dto';
 
 @Injectable()
-export class CommentService {
+export class CommentsService {
   constructor(
     @InjectRepository(Comment)
     private commentsRepository: Repository<Comment>,

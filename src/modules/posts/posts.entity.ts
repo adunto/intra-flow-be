@@ -23,9 +23,9 @@ export class Post {
   @ApiProperty({ description: '제목', example: '나는 누구인가?' })
   title: string;
 
-  @Column({ type: 'text' })
-  @ApiProperty({ description: '내용 (Markdown)', example: '# 반갑습니다. ...' })
-  content: string;
+  @Column({ type: 'jsonb' })
+  @ApiProperty({ description: 'Tiptap 에디터 Json 본문 내용' })
+  content: any;
 
   @Column({ type: 'int', default: 0, name: 'view_count' })
   @ApiProperty({ description: '조회수', default: 0 })

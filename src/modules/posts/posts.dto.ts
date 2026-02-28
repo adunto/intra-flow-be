@@ -64,8 +64,7 @@ export class CreatePostDto {
     required: true,
   })
   @MinLength(1)
-  @IsString()
-  content: string;
+  content: any;
 }
 
 export class UpdatePostDto {
@@ -84,6 +83,5 @@ export class UpdatePostDto {
     required: true,
   })
   @MinLength(1)
-  @IsString()
-  content: string;
+  content: any;
 }

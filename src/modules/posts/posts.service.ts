@@ -24,6 +24,12 @@ export class PostsService {
       order: { createdAt: 'DESC' },
       relations: ['user'],
       select: {
+        id: true,
+        title: true,
+        viewCount: true,
+        // likeCount: true,
+        createdAt: true,
+        updatedAt: true,
         user: { id: true, username: true, email: true },
       },
       take: limitNum, // 가져올 개수 (LIMIT)
@@ -56,6 +62,18 @@ export class PostsService {
     const qb = this.postsRepository.createQueryBuilder('post');
 
     qb.leftJoinAndSelect('post.user', 'user');
+
+    qb.select([
+      'post.id',
+      'post.title',
+      'post.viewCount',
+      // 'post.likeCount',
+      'post.createdAt',
+      'post.updatedAt',
+      'user.id',
+      'user.username',
+      'user.email',
+    ]);
 
     // 검색 조건이 있을 때만 필터링
     if (searchType && searchType.length > 0 && searchItem) {

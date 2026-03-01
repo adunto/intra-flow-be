@@ -15,9 +15,9 @@ import { User } from '../users/users.entity';
 
 @Entity('comments')
 export class Comment {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   @ApiProperty({ description: '댓글 ID' })
-  id: number;
+  id: string;
 
   @Column({ type: 'text' })
   @ApiProperty({ description: '댓글 내용' })
@@ -70,7 +70,7 @@ export class Comment {
 
   @Column({ name: 'parent_id', nullable: true })
   @ApiProperty({ description: '부모 댓글 ID (대댓글일 경우)', required: false })
-  parentId?: number;
+  parentId?: string;
 
   @OneToMany(() => Comment, (comment) => comment.parent)
   children: Comment[];

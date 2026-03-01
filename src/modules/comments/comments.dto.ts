@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateCommentDto {
   @ApiProperty({ description: '댓글 내용', example: '정말 유익한 글이네요!' })
@@ -13,8 +13,7 @@ export class CreateCommentDto {
     required: false,
   })
   @IsOptional()
-  @IsNumber()
-  parentId?: number;
+  parentId?: string;
 }
 
 export class UpdateCommentDto {

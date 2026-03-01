@@ -9,7 +9,6 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -60,7 +59,7 @@ export class CommentsController {
   @UseGuards(AuthGuard('jwt'))
   @Put('comments/:id') // URL: /comments/1 (게시물 ID 불필요)
   async updateComment(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @CurrentUser() user: User,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
@@ -73,10 +72,7 @@ export class CommentsController {
   @UseGuards(AuthGuard('jwt'))
   @Delete('comments/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteComment(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: User,
-  ) {
+  async deleteComment(@Param('id') id: string, @CurrentUser() user: User) {
     await this.commentsService.deleteComment(user.id, id);
   }
 }

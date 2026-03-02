@@ -83,7 +83,17 @@ export class PostsService {
             innerQb.orWhere('post.title LIKE :keyword', { keyword });
           }
           if (searchType.includes(SearchType.CONTENT)) {
-            innerQb.orWhere('post.content LIKE :keyword', { keyword });
+            innerQb.orWhere(
+              `EXISTS (
+                SELECT 1 
+                FROM jsonb_path_query(
+                  post.content, 
+                  '$.** ? (@.type == "text").text'
+                ) AS extracted_text 
+                WHERE extracted_text::text LIKE :keyword
+              )`,
+              { keyword },
+            );
           }
           if (searchType.includes(SearchType.AUTHOR)) {
             innerQb.orWhere('user.username LIKE :keyword', { keyword });

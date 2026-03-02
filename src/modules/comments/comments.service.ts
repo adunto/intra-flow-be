@@ -87,7 +87,7 @@ export class CommentsService {
   // 댓글 수정
   async updateComment(
     userId: number,
-    commentId: number,
+    commentId: string,
     updateCommentDto: UpdateCommentDto,
   ): Promise<Comment> {
     const comment = await this.checkCommentOwnership(commentId, userId);
@@ -97,7 +97,7 @@ export class CommentsService {
   }
 
   // 댓글 삭제 (Soft Delete)
-  async deleteComment(userId: number, commentId: number): Promise<void> {
+  async deleteComment(userId: number, commentId: string): Promise<void> {
     const comment = await this.checkCommentOwnership(commentId, userId);
 
     // softDelete 사용 (deletedAt 컬럼 업데이트)
@@ -106,7 +106,7 @@ export class CommentsService {
 
   // --- Helper: 권한 확인 ---
 
-  private async checkCommentOwnership(commentId: number, userId: number) {
+  private async checkCommentOwnership(commentId: string, userId: number) {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
     });

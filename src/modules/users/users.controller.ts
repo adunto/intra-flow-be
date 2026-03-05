@@ -10,6 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { User } from './users.entity';
 import { Post } from '../posts/posts.entity';
+import { Comment } from '../comments/comments.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -38,4 +39,17 @@ export class UsersController {
   async getUserPosts(@CurrentUser() user: User) {
     return this.userService.getUserPosts(user.id);
   }
+
+  // 유저가 작성한 댓글 목록 조회 (GET)
+  @ApiOperation({ summary: '내가 작성한 댓글 조회' })
+  @ApiResponse({ status: 200, description: '조회 성공', type: [Comment] })
+  @ApiResponse({ status: 401, description: '인증되지 않음' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @Get('comments')
+  async getUserComments(@CurrentUser() user: User) {
+    return this.userService.getUserComments(user.id);
+  }
+
+  
 }

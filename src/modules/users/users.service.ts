@@ -30,6 +30,17 @@ export class UserService {
           createdAt: 'DESC',
         },
       },
+      select: {
+        posts: {
+          id: true,
+          title: true,
+          viewCount: true,
+          likeCount: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
+        },
+      },
     });
 
     if (!user) {
@@ -37,5 +48,24 @@ export class UserService {
     }
 
     return user.posts;
+  }
+
+  // 유저가 작성한 댓글 목록 조회
+  async getUserComments(userId: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['comments'],
+      order: {
+        comments: {
+          createdAt: 'DESC',
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    return user.comments;
   }
 }

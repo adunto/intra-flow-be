@@ -8,7 +8,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../users/users.entity';
 import { Comment } from '../comments/comments.entity';
@@ -41,11 +40,16 @@ export class Post {
   @ApiProperty({ description: '생성일' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  @ApiProperty({ description: '수정일' })
-  updatedAt: Date;
+  @Column({
+    name: 'updated_at',
+    type: 'timestamp',
+    nullable: true,
+    default: null,
+  })
+  @ApiProperty({ description: '수정일', required: false })
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' }) // Soft Delete
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null }) // Soft Delete
   @ApiProperty({ description: '삭제일', required: false })
   deletedAt?: Date;
 

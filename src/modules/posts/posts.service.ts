@@ -6,7 +6,12 @@ import {
 import { Brackets, Repository, WhereExpressionBuilder } from 'typeorm';
 import { Post } from './posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePostDto, SearchPostDto, SearchType } from './posts.dto';
+import {
+  CreatePostDto,
+  SearchPostDto,
+  SearchType,
+  UpdatePostDto,
+} from './posts.dto';
 
 @Injectable()
 export class PostsService {
@@ -168,13 +173,16 @@ export class PostsService {
   async updatePost(
     id: string,
     userId: number,
-    updatePostDto: CreatePostDto,
+    updatePostDto: UpdatePostDto,
   ): Promise<Post> {
     const post = await this.checkPostOwnership(id, userId);
 
     // 내용 업데이트
     post.title = updatePostDto.title;
     post.content = updatePostDto.content;
+
+    // 수정일 업데이트
+    post.updatedAt = new Date();
 
     return this.postsRepository.save(post);
   }

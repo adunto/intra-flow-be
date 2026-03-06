@@ -43,7 +43,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     // 유저 검증 validateUser
-    const { accessToken, refreshToken } =
+    const { user, accessToken, refreshToken } =
       await this.authService.login(loginDto);
 
     res.cookie('refresh_token', refreshToken, {
@@ -54,7 +54,7 @@ export class AuthController {
       path: '/',
     });
 
-    return { accessToken };
+    return { user, accessToken };
   }
 
   @ApiOperation({ summary: 'AccessToken 재발급' })
@@ -68,11 +68,11 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
-    @CurrentUser() user: ValidateUser,
+    @CurrentUser() validateUser: ValidateUser,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { success, message, accessToken, refreshToken } =
-      await this.authService.refreshTokens(user.sub, user.refreshToken);
+    const { success, message, user, accessToken, refreshToken } =
+      await this.authService.refreshTokens(validateUser.sub, validateUser.refreshToken);
 
     if (!success) {
       return { success, message };
@@ -86,7 +86,7 @@ export class AuthController {
       path: '/',
     });
 
-    return { success, accessToken };
+    return { success, user, accessToken };
   }
 
   @ApiOperation({ summary: '로그아웃' })

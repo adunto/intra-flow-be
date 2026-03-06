@@ -69,8 +69,17 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('이메일 또는 비밀번호를 확인해주세요');
     }
+    const {accessToken, refreshToken} = await this.getTokens(user.id, user.email);
 
-    return this.getTokens(user.id, user.email);
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
+      accessToken,
+      refreshToken,
+    }
   }
 
   // 토큰 재발급
@@ -124,6 +133,11 @@ export class AuthService {
     return {
       success: true,
       message: '발급 성공',
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
       accessToken,
       refreshToken,
     };

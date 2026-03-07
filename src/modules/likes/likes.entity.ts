@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -16,6 +17,10 @@ import { LikeTargetType } from 'src/common/common.enums';
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ name: 'target_id', type: 'bigint' })
+  @ApiProperty({ description: '대상 ID (Post ID or Comment ID)' })
+  targetId: string;
 
   @Column({
     name: 'target_type',
@@ -34,6 +39,9 @@ export class Like {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date;
+
   // --- relations ---
 
   @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
@@ -42,8 +50,4 @@ export class Like {
 
   @Column({ name: 'user_id' })
   userId: number;
-
-  @Column({ name: 'target_id', type: 'bigint' })
-  @ApiProperty({ description: '대상 ID (Post ID or Comment ID)' })
-  targetId: string;
 }

@@ -63,9 +63,9 @@ export class PostsController {
 
   // 게시물 작성 (POST)
   @ApiOperation({ summary: '게시물 작성' })
-  @ApiBearerAuth()
   @ApiResponse({ status: 201, description: '작성 성공' })
   @ApiResponse({ status: 401, description: '인증 실패' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt')) // 로그인 필요
   @Post()
   async createPost(
@@ -77,10 +77,10 @@ export class PostsController {
 
   // 게시물 수정 (PUT)
   @ApiOperation({ summary: '게시물 수정' })
-  @ApiBearerAuth()
   @ApiResponse({ status: 200, description: '수정 성공' })
   @ApiResponse({ status: 403, description: '본인 게시물이 아님' })
   @ApiResponse({ status: 404, description: '게시물 없음' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async updatePost(
@@ -93,9 +93,10 @@ export class PostsController {
 
   // 게시물 삭제 (DELETE)
   @ApiOperation({ summary: '게시물 삭제' })
-  @ApiBearerAuth()
   @ApiResponse({ status: 204, description: '삭제 성공 (No Content)' })
-  @ApiResponse({ status: 401, description: '본인 게시물이 아님' })
+  @ApiResponse({ status: 403, description: '본인 게시물이 아님' })
+  @ApiResponse({ status: 404, description: '게시물 없음' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT) // 204 반환
@@ -103,4 +104,6 @@ export class PostsController {
     await this.postsService.deletePost(id, user.id);
     // return 값 없음 (204 No Content)
   }
+
+  
 }

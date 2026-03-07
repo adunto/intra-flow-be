@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -14,6 +15,7 @@ import { LikeTargetType } from 'src/common/common.enums';
 
 @Entity('likes')
 @Unique('uk_like_user_target', ['userId', 'targetId', 'targetType'])
+@Index(['targetId', 'targetType'])
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;

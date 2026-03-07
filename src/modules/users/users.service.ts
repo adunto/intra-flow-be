@@ -34,11 +34,8 @@ export class UserService {
         posts: {
           id: true,
           title: true,
-          viewCount: true,
-          likeCount: true,
           createdAt: true,
           updatedAt: true,
-          deletedAt: true,
         },
       },
     });
@@ -58,6 +55,15 @@ export class UserService {
       order: {
         comments: {
           createdAt: 'DESC',
+        },
+      },
+      select: {
+        comments: {
+          id: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+          postId: true,
         },
       },
     });

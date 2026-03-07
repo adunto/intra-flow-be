@@ -33,9 +33,14 @@ export class Comment {
   @ApiProperty({ description: '작성일' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @Column({
+    name: 'updated_at',
+    type: 'timestamp',
+    nullable: true,
+    default: null,
+  })
   @ApiProperty({ description: '수정일' })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' }) // Soft Delete
   @ApiProperty({ description: '삭제일', required: false })

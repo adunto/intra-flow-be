@@ -7,12 +7,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LikesService } from './likes.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { User } from '../users/users.entity';
 import { CreateLikeDto } from './likes.dto';
 
+@ApiTags('Likes')
 @Controller()
 export class LikesController {
   constructor(private likesService: LikesService) {}

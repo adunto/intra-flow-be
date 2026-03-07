@@ -50,6 +50,4 @@ export class UsersController {
   async getUserComments(@CurrentUser() user: User) {
     return this.userService.getUserComments(user.id);
   }
-
-  
 }

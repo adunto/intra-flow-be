@@ -72,7 +72,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { success, message, user, accessToken, refreshToken } =
-      await this.authService.refreshTokens(validateUser.sub, validateUser.refreshToken);
+      await this.authService.refreshTokens(
+        validateUser.sub,
+        validateUser.refreshToken,
+      );
 
     if (!success) {
       return { success, message };

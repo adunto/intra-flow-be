@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsEnum,
@@ -8,22 +8,22 @@ import {
   IsString,
   Min,
   MinLength,
-} from 'class-validator';
+} from "class-validator";
 
 export enum SearchType {
-  AUTHOR = 'AUTHOR',
-  TITLE = 'TITLE',
-  CONTENT = 'CONTENT',
+  AUTHOR = "AUTHOR",
+  TITLE = "TITLE",
+  CONTENT = "CONTENT",
 }
 
 export class PaginationDto {
-  @ApiProperty({ description: '페이지 번호', default: 1, required: false })
+  @ApiProperty({ description: "페이지 번호", default: 1, required: false })
   @Type(() => Number) // 쿼리 스트링은 문자열이므로 숫자로 변환
   @IsNumber()
   @Min(1)
   page: number = 1;
 
-  @ApiProperty({ description: '페이지당 개수', default: 10, required: false })
+  @ApiProperty({ description: "페이지당 개수", default: 10, required: false })
   @Type(() => Number)
   @IsNumber()
   @Min(1)
@@ -32,7 +32,7 @@ export class PaginationDto {
 
 export class SearchPostDto extends PaginationDto {
   @ApiProperty({
-    description: '검색 조건 (배열 가능)',
+    description: "검색 조건 (배열 가능)",
     enum: SearchType,
     isArray: true,
     required: false, // 검색 없이 전체 조회일 수도 있으므로 optional
@@ -42,7 +42,7 @@ export class SearchPostDto extends PaginationDto {
   @IsEnum(SearchType, { each: true })
   searchType?: SearchType[];
 
-  @ApiProperty({ description: '검색어', required: false })
+  @ApiProperty({ description: "검색어", required: false })
   @IsOptional()
   @IsString()
   searchItem?: string;
@@ -50,8 +50,8 @@ export class SearchPostDto extends PaginationDto {
 
 export class CreatePostDto {
   @ApiProperty({
-    description: '글 제목',
-    example: 'OOOO 주간 업무 보고입니다.',
+    description: "글 제목",
+    example: "OOOO 주간 업무 보고입니다.",
     required: true,
   })
   @MinLength(1)
@@ -59,8 +59,8 @@ export class CreatePostDto {
   title: string;
 
   @ApiProperty({
-    description: '글 내용',
-    example: '...글 내용',
+    description: "글 내용",
+    example: "...글 내용",
     required: true,
   })
   @MinLength(1)
@@ -69,8 +69,8 @@ export class CreatePostDto {
 
 export class UpdatePostDto {
   @ApiProperty({
-    description: '수정한 글 제목',
-    example: 'OOOO 주간 업무 보고입니다.',
+    description: "수정한 글 제목",
+    example: "OOOO 주간 업무 보고입니다.",
     required: true,
   })
   @MinLength(1)
@@ -78,8 +78,8 @@ export class UpdatePostDto {
   title: string;
 
   @ApiProperty({
-    description: '수정한 글 내용',
-    example: '...글 내용',
+    description: "수정한 글 내용",
+    example: "...글 내용",
     required: true,
   })
   @MinLength(1)

@@ -8,36 +8,36 @@ import {
   Post,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import {
   ApiBearerAuth,
   ApiCookieAuth,
   ApiOperation,
   ApiResponse,
-} from '@nestjs/swagger';
-import type { Response } from 'express';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
-import type { LoginDto, SignupDto } from './auth.dto';
-import type { AuthService } from './auth.service';
-import type { ValidateUser } from './jwt/jwt-refresh.strategy';
+} from "@nestjs/swagger";
+import type { Response } from "express";
+import { CurrentUser } from "src/common/decorators/user.decorator";
+import type { LoginDto, SignupDto } from "./auth.dto";
+import type { AuthService } from "./auth.service";
+import type { ValidateUser } from "./jwt/jwt-refresh.strategy";
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiOperation({ summary: '회원가입' })
-  @ApiResponse({ status: 201, description: '회원가입 성공' })
-  @ApiResponse({ status: 409, description: '이미 존재하는 이메일' })
-  @Post('signup')
+  @ApiOperation({ summary: "회원가입" })
+  @ApiResponse({ status: 201, description: "회원가입 성공" })
+  @ApiResponse({ status: 409, description: "이미 존재하는 이메일" })
+  @Post("signup")
   async register(@Body() signupDto: SignupDto) {
     return this.authService.signup(signupDto);
   }
 
-  @ApiOperation({ summary: '로그인' })
-  @ApiResponse({ status: 200, description: '로그인 성공 (Access Token 반환)' })
-  @ApiResponse({ status: 401, description: '인증 실패' })
-  @Post('login')
+  @ApiOperation({ summary: "로그인" })
+  @ApiResponse({ status: 200, description: "로그인 성공 (Access Token 반환)" })
+  @ApiResponse({ status: 401, description: "인증 실패" })
+  @Post("login")
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
@@ -46,26 +46,26 @@ export class AuthController {
     const { user, accessToken, refreshToken } =
       await this.authService.login(loginDto);
 
-    res.cookie('refresh_token', refreshToken, {
+    res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
+      path: "/",
     });
 
     return { user, accessToken };
   }
 
-  @ApiOperation({ summary: 'AccessToken 재발급' })
+  @ApiOperation({ summary: "AccessToken 재발급" })
   @ApiCookieAuth()
-  @ApiResponse({ status: 200, description: '재발급 성공' })
+  @ApiResponse({ status: 200, description: "재발급 성공" })
   @ApiResponse({
     status: 403,
-    description: 'Refresh Token이 없거나 유효하지 않음',
+    description: "Refresh Token이 없거나 유효하지 않음",
   })
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @Post('refresh')
+  @UseGuards(AuthGuard("jwt-refresh"))
+  @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(
     @CurrentUser() validateUser: ValidateUser,
@@ -81,30 +81,30 @@ export class AuthController {
       return { success, message };
     }
 
-    res.cookie('refresh_token', refreshToken, {
+    res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
+      path: "/",
     });
 
     return { success, user, accessToken };
   }
 
-  @ApiOperation({ summary: '로그아웃' })
+  @ApiOperation({ summary: "로그아웃" })
   @ApiBearerAuth()
-  @ApiResponse({ status: 200, description: '로그아웃 성공' })
+  @ApiResponse({ status: 200, description: "로그아웃 성공" })
   @ApiResponse({
     status: 404,
-    description: '이미 로그아웃 되었거나 유효하지 않은 세션입니다.',
+    description: "이미 로그아웃 되었거나 유효하지 않은 세션입니다.",
   })
   @ApiResponse({
     status: 500,
-    description: '로그아웃 처리 중 오류가 발생했습니다. 다시 시도해 주세요.',
+    description: "로그아웃 처리 중 오류가 발생했습니다. 다시 시도해 주세요.",
   })
-  @UseGuards(AuthGuard('jwt'))
-  @Post('logout')
+  @UseGuards(AuthGuard("jwt"))
+  @Post("logout")
   @HttpCode(HttpStatus.OK)
   async logout(
     @CurrentUser() user: ValidateUser,
@@ -112,15 +112,15 @@ export class AuthController {
   ) {
     try {
       await this.authService.deleteToken(user.sub);
-      res.cookie('refresh_token', '', {
+      res.cookie("refresh_token", "", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        path: '/',
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
         maxAge: 0,
       });
 
-      return { success: true, message: '성공' };
+      return { success: true, message: "성공" };
     } catch (error) {
       if (error instanceof NotFoundException) {
         return { success: false, message: error.message };
@@ -128,7 +128,7 @@ export class AuthController {
         return { success: false, message: error.message };
       }
 
-      return { success: false, message: '로그아웃 실패' };
+      return { success: false, message: "로그아웃 실패" };
     }
   }
 }

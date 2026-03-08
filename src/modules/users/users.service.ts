@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { User } from './users.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import type { Repository } from "typeorm";
+import { User } from "./users.entity";
 
 @Injectable()
 export class UserService {
@@ -24,10 +24,10 @@ export class UserService {
   async getUserPosts(userId: number) {
     const user = await this.usersRepository.findOne({
       where: { id: userId },
-      relations: ['posts'],
+      relations: ["posts"],
       order: {
         posts: {
-          createdAt: 'DESC',
+          createdAt: "DESC",
         },
       },
       select: {
@@ -41,7 +41,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+      throw new NotFoundException("사용자를 찾을 수 없습니다.");
     }
 
     return user.posts;
@@ -51,10 +51,10 @@ export class UserService {
   async getUserComments(userId: number) {
     const user = await this.usersRepository.findOne({
       where: { id: userId },
-      relations: ['comments'],
+      relations: ["comments"],
       order: {
         comments: {
-          createdAt: 'DESC',
+          createdAt: "DESC",
         },
       },
       select: {
@@ -69,7 +69,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+      throw new NotFoundException("사용자를 찾을 수 없습니다.");
     }
 
     return user.comments;

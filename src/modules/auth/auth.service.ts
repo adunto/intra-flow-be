@@ -1,19 +1,19 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
   ConflictException,
   Inject,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import type { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
-import type { Cache } from 'cache-manager';
-import type { Repository } from 'typeorm';
-import { User } from '../users/users.entity';
-import type { LoginDto, SignupDto } from './auth.dto';
+} from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
+import type { JwtService } from "@nestjs/jwt";
+import { InjectRepository } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
+import type { Cache } from "cache-manager";
+import type { Repository } from "typeorm";
+import { User } from "../users/users.entity";
+import type { LoginDto, SignupDto } from "./auth.dto";
 
 @Injectable()
 export class AuthService {
@@ -34,7 +34,7 @@ export class AuthService {
       where: { email },
     });
     if (existingUser) {
-      throw new ConflictException('이미 존재하는 이메일입니다.');
+      throw new ConflictException("이미 존재하는 이메일입니다.");
     }
 
     // 비밀번호 해싱
@@ -61,13 +61,13 @@ export class AuthService {
     const { email, password } = loginDto;
 
     const user = await this.userRepository
-      .createQueryBuilder('user')
-      .addSelect('user.password')
-      .where('user.email = :email', { email })
+      .createQueryBuilder("user")
+      .addSelect("user.password")
+      .where("user.email = :email", { email })
       .getOne();
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('이메일 또는 비밀번호를 확인해주세요');
+      throw new UnauthorizedException("이메일 또는 비밀번호를 확인해주세요");
     }
     const { accessToken, refreshToken } = await this.getTokens(
       user.id,
@@ -98,7 +98,7 @@ export class AuthService {
     if (!storedRefreshToken) {
       return {
         success: false,
-        message: '로그인이 만료되었습니다. 다시 로그인해주세요.',
+        message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
         accessToken: null,
         refreshToken: null,
       };
@@ -112,7 +112,7 @@ export class AuthService {
     if (!isMatch) {
       return {
         success: false,
-        message: '유효하지 않은 토큰입니다. (Access Denied)',
+        message: "유효하지 않은 토큰입니다. (Access Denied)",
         accessToken: null,
         refreshToken: null,
       };
@@ -123,7 +123,7 @@ export class AuthService {
     if (!user) {
       return {
         success: false,
-        message: '존재하지 않는 사용자입니다.',
+        message: "존재하지 않는 사용자입니다.",
         accessToken: null,
         refreshToken: null,
       };
@@ -137,7 +137,7 @@ export class AuthService {
 
     return {
       success: true,
-      message: '발급 성공',
+      message: "발급 성공",
       user: {
         id: user.id,
         email: user.email,
@@ -157,16 +157,16 @@ export class AuthService {
       this.jwtService.signAsync(
         { sub: userId, email },
         {
-          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
+          secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
+          expiresIn: "15m",
         },
       ),
       // RefreshToken : 긴 만료 시간 (7d)
       this.jwtService.signAsync(
         { sub: userId, email },
         {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '7d',
+          secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
+          expiresIn: "7d",
         },
       ),
     ]);

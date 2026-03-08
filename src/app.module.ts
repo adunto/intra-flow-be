@@ -1,26 +1,26 @@
-import { CacheModule } from '@nestjs/cache-manager';
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import * as redisStore from 'cache-manager-ioredis';
-import * as Joi from 'joi';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './modules/auth/auth.module';
-import { CommentsModule } from './modules/comments/comments.module';
-import { LikesModule } from './modules/likes/likes.module';
-import { PostsModule } from './modules/posts/posts.module';
-import { UsersModule } from './modules/users/users.module';
+import { CacheModule } from "@nestjs/cache-manager";
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import * as redisStore from "cache-manager-ioredis";
+import * as Joi from "joi";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { AuthModule } from "./modules/auth/auth.module";
+import { CommentsModule } from "./modules/comments/comments.module";
+import { LikesModule } from "./modules/likes/likes.module";
+import { PostsModule } from "./modules/posts/posts.module";
+import { UsersModule } from "./modules/users/users.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ".env",
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .default('development'),
+          .valid("development", "production", "test")
+          .default("development"),
         PORT: Joi.number().default(8000),
 
         // DB 필수값 체크
@@ -34,7 +34,7 @@ import { UsersModule } from './modules/users/users.module';
 
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().default(6379),
-        REDIS_PASSWORD: Joi.string().allow('').default(''),
+        REDIS_PASSWORD: Joi.string().allow("").default(""),
 
         JWT_ACCESS_SECRET: Joi.string().required(),
         JWT_REFRESH_SECRET: Joi.string().required(),
@@ -44,17 +44,17 @@ import { UsersModule } from './modules/users/users.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_DATABASE'),
+        type: "postgres",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        username: configService.get<string>("DB_USERNAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        database: configService.get<string>("DB_DATABASE"),
 
         autoLoadEntities: true,
 
-        synchronize: configService.get<boolean>('DB_SYNC'),
-        dropSchema: configService.get<boolean>('DB_DROP'),
+        synchronize: configService.get<boolean>("DB_SYNC"),
+        dropSchema: configService.get<boolean>("DB_DROP"),
 
         logging: true,
       }),
@@ -66,9 +66,9 @@ import { UsersModule } from './modules/users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         store: redisStore as unknown as any,
-        host: configService.get<string>('REDIS_HOST'),
-        port: configService.get<number>('REDIS_PORT'),
-        password: configService.get<string>('REDIS_PASSWORD'),
+        host: configService.get<string>("REDIS_HOST"),
+        port: configService.get<number>("REDIS_PORT"),
+        password: configService.get<string>("REDIS_PASSWORD"),
         ttl: 600,
       }),
     }),

@@ -1,8 +1,8 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import type { Response } from 'express';
-import { AuthController } from './auth.controller';
-import type { LoginDto, SignupDto } from './auth.dto';
-import { AuthService } from './auth.service';
+import { Test, type TestingModule } from "@nestjs/testing";
+import type { Response } from "express";
+import { AuthController } from "./auth.controller";
+import type { LoginDto, SignupDto } from "./auth.dto";
+import { AuthService } from "./auth.service";
 
 const mockAuthService = {
   register: jest.fn(),
@@ -16,7 +16,7 @@ const mockResponse = {
   clearCookie: jest.fn(),
 } as unknown as Response;
 
-describe('AuthController', () => {
+describe("AuthController", () => {
   let controller: AuthController;
   let service: typeof mockAuthService;
 
@@ -39,16 +39,16 @@ describe('AuthController', () => {
   });
 
   // Controller 정의가 된 후에 테스트 시작
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('register', () => {
-    it('회원가입 테스트', async () => {
+  describe("register", () => {
+    it("회원가입 테스트", async () => {
       const registerDto: SignupDto = {
-        email: 'test@example.com',
-        password: 'password123!',
-        username: 'tester',
+        email: "test@example.com",
+        password: "password123!",
+        username: "tester",
       };
 
       await controller.register(registerDto);
@@ -58,16 +58,16 @@ describe('AuthController', () => {
     });
   });
 
-  describe('login', () => {
-    it('should return access token and set refresh token in cookie', async () => {
+  describe("login", () => {
+    it("should return access token and set refresh token in cookie", async () => {
       const loginDto: LoginDto = {
-        email: 'test@example.com',
-        password: 'password123!',
+        email: "test@example.com",
+        password: "password123!",
       };
 
       const tokens = {
-        accessToken: 'mock_access_token',
-        refreshToken: 'mock_refresh_token',
+        accessToken: "mock_access_token",
+        refreshToken: "mock_refresh_token",
       };
 
       // 서비스가 성공적으로 토큰을 반환한다고 가정
@@ -86,12 +86,12 @@ describe('AuthController', () => {
       // 3. 쿠키 설정 확인
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refresh_token', // 쿠키 이름
+        "refresh_token", // 쿠키 이름
         tokens.refreshToken, // 값
         expect.objectContaining({
           // 옵션 검증
           httpOnly: true,
-          sameSite: 'strict',
+          sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
           // secure 옵션은 환경변수에 따라 다르므로, boolean 타입인지 정도만 체크하거나 생략 가능
           // secure: expect.any(Boolean),

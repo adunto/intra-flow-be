@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { LikeTargetType } from 'src/common/common.enums';
+import { ApiProperty } from "@nestjs/swagger";
+import { LikeTargetType } from "src/common/common.enums";
 import {
   Column,
   CreateDateColumn,
@@ -10,38 +10,38 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
-} from 'typeorm';
-import { User } from '../users/users.entity';
+} from "typeorm";
+import { User } from "../users/users.entity";
 
-@Entity('likes')
-@Unique('uk_like_user_target', ['userId', 'targetId', 'targetType'])
-@Index(['targetId', 'targetType'])
+@Entity("likes")
+@Unique("uk_like_user_target", ["userId", "targetId", "targetType"])
+@Index(["targetId", "targetType"])
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'target_id', type: 'bigint' })
-  @ApiProperty({ description: '대상 ID (Post ID or Comment ID)' })
+  @Column({ name: "target_id", type: "bigint" })
+  @ApiProperty({ description: "대상 ID (Post ID or Comment ID)" })
   targetId: string;
 
   @Column({
-    name: 'target_type',
-    type: 'enum',
+    name: "target_type",
+    type: "enum",
     enum: LikeTargetType,
     default: LikeTargetType.POST,
   })
   @ApiProperty({
-    description: '대상 타입 (POST | COMMENT)',
+    description: "대상 타입 (POST | COMMENT)",
     enum: LikeTargetType,
   })
   targetType: LikeTargetType;
 
   // --- 타임 스탬프 ---
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: "deleted_at" })
   deletedAt?: Date;
 
   // --- relations ---
@@ -49,11 +49,11 @@ export class Like {
   @ManyToOne(
     () => User,
     (user) => user.likes,
-    { onDelete: 'CASCADE' },
+    { onDelete: "CASCADE" },
   )
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: "user_id" })
   user: User;
 
-  @Column({ name: 'user_id' })
+  @Column({ name: "user_id" })
   userId: number;
 }

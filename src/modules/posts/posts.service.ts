@@ -2,20 +2,20 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import {
   Brackets,
   type Repository,
   type WhereExpressionBuilder,
-} from 'typeorm';
+} from "typeorm";
 import {
   type CreatePostDto,
   type SearchPostDto,
   SearchType,
   type UpdatePostDto,
-} from './posts.dto';
-import { Post } from './posts.entity';
+} from "./posts.dto";
+import { Post } from "./posts.entity";
 
 @Injectable()
 export class PostsService {
@@ -30,8 +30,8 @@ export class PostsService {
     const limitNum = Number(limit) || 10;
 
     const [posts, total] = await this.postsRepository.findAndCount({
-      order: { createdAt: 'DESC' },
-      relations: ['user'],
+      order: { createdAt: "DESC" },
+      relations: ["user"],
       select: {
         id: true,
         title: true,
@@ -68,20 +68,20 @@ export class PostsService {
     const limitNum = Number(limit) || 10;
 
     const keyword = `%${searchItem}%`;
-    const qb = this.postsRepository.createQueryBuilder('post');
+    const qb = this.postsRepository.createQueryBuilder("post");
 
-    qb.leftJoinAndSelect('post.user', 'user');
+    qb.leftJoinAndSelect("post.user", "user");
 
     qb.select([
-      'post.id',
-      'post.title',
-      'post.viewCount',
+      "post.id",
+      "post.title",
+      "post.viewCount",
       // 'post.likeCount',
-      'post.createdAt',
-      'post.updatedAt',
-      'user.id',
-      'user.username',
-      'user.email',
+      "post.createdAt",
+      "post.updatedAt",
+      "user.id",
+      "user.username",
+      "user.email",
     ]);
 
     // 검색 조건이 있을 때만 필터링
@@ -89,7 +89,7 @@ export class PostsService {
       qb.andWhere(
         new Brackets((innerQb: WhereExpressionBuilder) => {
           if (searchType.includes(SearchType.TITLE)) {
-            innerQb.orWhere('post.title LIKE :keyword', { keyword });
+            innerQb.orWhere("post.title LIKE :keyword", { keyword });
           }
           if (searchType.includes(SearchType.CONTENT)) {
             innerQb.orWhere(
@@ -105,13 +105,13 @@ export class PostsService {
             );
           }
           if (searchType.includes(SearchType.AUTHOR)) {
-            innerQb.orWhere('user.username LIKE :keyword', { keyword });
+            innerQb.orWhere("user.username LIKE :keyword", { keyword });
           }
         }),
       );
     }
 
-    qb.orderBy('post.createdAt', 'DESC');
+    qb.orderBy("post.createdAt", "DESC");
 
     // 페이지네이션 적용 (skip, take)
     qb.skip((pageNum - 1) * limitNum);
@@ -134,7 +134,7 @@ export class PostsService {
   async getPostById(id: string): Promise<Post> {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations: ['user', 'comments'],
+      relations: ["user", "comments"],
       select: {
         user: {
           id: true,
@@ -152,7 +152,7 @@ export class PostsService {
       throw new ForbiddenException(`해당 게시물은 삭제되었습니다. (ID: ${id})`);
     }
 
-    await this.postsRepository.increment({ id }, 'viewCount', 1);
+    await this.postsRepository.increment({ id }, "viewCount", 1);
 
     return post;
   }
@@ -210,11 +210,11 @@ export class PostsService {
     const post = await this.postsRepository.findOne({ where: { id: postId } });
 
     if (!post) {
-      throw new NotFoundException('존재하지 않는 게시물입니다.');
+      throw new NotFoundException("존재하지 않는 게시물입니다.");
     }
 
     if (post.userId !== userId) {
-      throw new ForbiddenException('본인의 게시물만 수정/삭제할 수 있습니다.');
+      throw new ForbiddenException("본인의 게시물만 수정/삭제할 수 있습니다.");
     }
 
     return post;

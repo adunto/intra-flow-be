@@ -3,12 +3,12 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { Post } from '../posts/posts.entity';
-import type { CreateCommentDto, UpdateCommentDto } from './comments.dto';
-import { Comment } from './comments.entity';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import type { Repository } from "typeorm";
+import { Post } from "../posts/posts.entity";
+import type { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
+import { Comment } from "./comments.entity";
 
 @Injectable()
 export class CommentsService {
@@ -23,12 +23,12 @@ export class CommentsService {
   async getCommentsByPostId(postId: string) {
     return this.commentsRepository.find({
       where: { postId },
-      relations: ['user'], // 작성자 정보 포함
+      relations: ["user"], // 작성자 정보 포함
       select: {
         user: { id: true, username: true, email: true },
       },
       order: {
-        createdAt: 'ASC', // 작성순 정렬
+        createdAt: "ASC", // 작성순 정렬
       },
     });
   }
@@ -68,7 +68,7 @@ export class CommentsService {
       // Post ID가 string(BigInt)이므로 문자열 비교
       if (parentComment.postId !== postId) {
         throw new BadRequestException(
-          '부모 댓글이 해당 게시물에 존재하지 않습니다.',
+          "부모 댓글이 해당 게시물에 존재하지 않습니다.",
         );
       }
     }
@@ -112,11 +112,11 @@ export class CommentsService {
     });
 
     if (!comment) {
-      throw new NotFoundException('존재하지 않는 댓글입니다.');
+      throw new NotFoundException("존재하지 않는 댓글입니다.");
     }
 
     if (comment.userId !== userId) {
-      throw new ForbiddenException('본인의 댓글만 수정/삭제할 수 있습니다.');
+      throw new ForbiddenException("본인의 댓글만 수정/삭제할 수 있습니다.");
     }
 
     return comment;

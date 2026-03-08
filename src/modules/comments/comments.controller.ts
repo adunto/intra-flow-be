@@ -9,32 +9,32 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
-import type { User } from '../users/users.entity';
-import type { CreateCommentDto, UpdateCommentDto } from './comments.dto';
-import type { CommentsService } from './comments.service';
+} from "@nestjs/swagger";
+import { CurrentUser } from "src/common/decorators/user.decorator";
+import type { User } from "../users/users.entity";
+import type { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
+import type { CommentsService } from "./comments.service";
 
-@ApiTags('Comments')
+@ApiTags("Comments")
 @Controller()
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   // 댓글 작성
-  @ApiOperation({ summary: '댓글 작성' })
+  @ApiOperation({ summary: "댓글 작성" })
   @ApiBearerAuth()
-  @ApiResponse({ status: 201, description: '성공' })
-  @UseGuards(AuthGuard('jwt'))
-  @Post('posts/:postId/comments') // URL: /posts/1/comments
+  @ApiResponse({ status: 201, description: "성공" })
+  @UseGuards(AuthGuard("jwt"))
+  @Post("posts/:postId/comments") // URL: /posts/1/comments
   async createComment(
-    @Param('postId') postId: string,
+    @Param("postId") postId: string,
     @CurrentUser() user: User,
     @Body() createCommentDto: CreateCommentDto,
   ) {
@@ -46,20 +46,20 @@ export class CommentsController {
   }
 
   // 댓글 목록 조회
-  @ApiOperation({ summary: '게시물의 댓글 목록 조회' })
-  @ApiResponse({ status: 200, description: '성공' })
-  @Get('posts/:postId/comments')
-  async getComments(@Param('postId') postId: string) {
+  @ApiOperation({ summary: "게시물의 댓글 목록 조회" })
+  @ApiResponse({ status: 200, description: "성공" })
+  @Get("posts/:postId/comments")
+  async getComments(@Param("postId") postId: string) {
     return this.commentsService.getCommentsByPostId(postId);
   }
 
   // 댓글 수정
-  @ApiOperation({ summary: '댓글 수정' })
+  @ApiOperation({ summary: "댓글 수정" })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  @Put('comments/:id') // URL: /comments/1 (게시물 ID 불필요)
+  @UseGuards(AuthGuard("jwt"))
+  @Put("comments/:id") // URL: /comments/1 (게시물 ID 불필요)
   async updateComment(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @CurrentUser() user: User,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
@@ -67,12 +67,12 @@ export class CommentsController {
   }
 
   // 댓글 삭제
-  @ApiOperation({ summary: '댓글 삭제' })
+  @ApiOperation({ summary: "댓글 삭제" })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  @Delete('comments/:id')
+  @UseGuards(AuthGuard("jwt"))
+  @Delete("comments/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteComment(@Param('id') id: string, @CurrentUser() user: User) {
+  async deleteComment(@Param("id") id: string, @CurrentUser() user: User) {
     await this.commentsService.deleteComment(user.id, id);
   }
 }

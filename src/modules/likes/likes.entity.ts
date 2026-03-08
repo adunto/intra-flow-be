@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { LikeTargetType } from 'src/common/common.enums';
 import {
   Column,
   CreateDateColumn,
@@ -10,8 +12,6 @@ import {
   Unique,
 } from 'typeorm';
 import { User } from '../users/users.entity';
-import { ApiProperty } from '@nestjs/swagger';
-import { LikeTargetType } from 'src/common/common.enums';
 
 @Entity('likes')
 @Unique('uk_like_user_target', ['userId', 'targetId', 'targetType'])
@@ -46,7 +46,11 @@ export class Like {
 
   // --- relations ---
 
-  @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
+  @ManyToOne(
+    () => User,
+    (user) => user.likes,
+    { onDelete: 'CASCADE' },
+  )
   @JoinColumn({ name: 'user_id' })
   user: User;
 

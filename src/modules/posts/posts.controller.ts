@@ -6,27 +6,27 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Put,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import type { User } from '../users/users.entity';
+import type {
   CreatePostDto,
   PaginationDto,
   SearchPostDto,
   UpdatePostDto,
 } from './posts.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { User } from '../users/users.entity';
+import type { PostsService } from './posts.service';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -104,6 +104,4 @@ export class PostsController {
     await this.postsService.deletePost(id, user.id);
     // return 값 없음 (204 No Content)
   }
-
-  
 }

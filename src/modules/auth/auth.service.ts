@@ -1,7 +1,4 @@
-import { type Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import {
   ConflictException,
   Inject,
@@ -9,11 +6,14 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto, SignupDto } from './auth.dto';
-import { Repository } from 'typeorm';
-import { User } from '../users/users.entity';
-import * as bcrypt from 'bcrypt';
+import type { ConfigService } from '@nestjs/config';
+import type { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import type { Cache } from 'cache-manager';
+import type { Repository } from 'typeorm';
+import { User } from '../users/users.entity';
+import type { LoginDto, SignupDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {

@@ -9,18 +9,18 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto, SignupDto } from './auth.dto';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiCookieAuth,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { type Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import type { Response } from 'express';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { type ValidateUser } from './jwt/jwt-refresh.strategy';
+import type { LoginDto, SignupDto } from './auth.dto';
+import type { AuthService } from './auth.service';
+import type { ValidateUser } from './jwt/jwt-refresh.strategy';
 
 @Controller('auth')
 export class AuthController {

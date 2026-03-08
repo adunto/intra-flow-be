@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '../users/users.entity';
+import { Test, type TestingModule } from '@nestjs/testing';
+import type { User } from '../users/users.entity';
 import { PostsController } from './posts.controller';
-import { Post } from './posts.entity';
+import type { CreatePostDto, SearchPostDto } from './posts.dto';
+import type { Post } from './posts.entity';
 import { PostsService } from './posts.service';
-import { CreatePostDto, SearchPostDto } from './posts.dto';
 
 const mockPostService = {
   getAllPosts: jest.fn(),

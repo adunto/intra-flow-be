@@ -6,17 +6,17 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { LikesService } from './likes.service';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { User } from '../users/users.entity';
-import { CreateLikeDto } from './likes.dto';
+import type { User } from '../users/users.entity';
+import type { CreateLikeDto } from './likes.dto';
+import type { LikesService } from './likes.service';
 
 @ApiTags('Likes')
 @Controller()

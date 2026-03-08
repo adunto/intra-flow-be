@@ -3,24 +3,24 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
   UseGuards,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { User } from '../users/users.entity';
-import { CommentsService } from './comments.service';
-import { CreateCommentDto, UpdateCommentDto } from './comments.dto';
+import type { User } from '../users/users.entity';
+import type { CreateCommentDto, UpdateCommentDto } from './comments.dto';
+import type { CommentsService } from './comments.service';
 
 @ApiTags('Comments')
 @Controller()

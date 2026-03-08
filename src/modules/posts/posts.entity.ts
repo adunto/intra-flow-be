@@ -9,8 +9,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../users/users.entity';
 import { Comment } from '../comments/comments.entity';
+import { User } from '../users/users.entity';
 
 @Entity('posts')
 export class Post {
@@ -56,10 +56,14 @@ export class Post {
   // --- relations ---
 
   // (사용자[User] : 게시물[Post]) (1:N)
-  @ManyToOne(() => User, (user) => user.posts, {
-    onDelete: 'CASCADE',
-    eager: false, // 조회 시 자동으로 JOIN 하지 않음 (성능 최적화)
-  })
+  @ManyToOne(
+    () => User,
+    (user) => user.posts,
+    {
+      onDelete: 'CASCADE',
+      eager: false, // 조회 시 자동으로 JOIN 하지 않음 (성능 최적화)
+    },
+  )
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -68,6 +72,9 @@ export class Post {
   userId: number;
 
   // (게시물[Post] : 댓글[Comment]) (1:N)
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @OneToMany(
+    () => Comment,
+    (comment) => comment.post,
+  )
   comments: Comment[];
 }

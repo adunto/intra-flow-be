@@ -1,16 +1,16 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UserService } from './users.service';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { User } from './users.entity';
-import { Post } from '../posts/posts.entity';
 import { Comment } from '../comments/comments.entity';
+import { Post } from '../posts/posts.entity';
+import { User } from './users.entity';
+import type { UserService } from './users.service';
 
 @ApiTags('Users')
 @Controller('users')

@@ -1,8 +1,8 @@
-import { Response } from 'express';
+import { Test, type TestingModule } from '@nestjs/testing';
+import type { Response } from 'express';
 import { AuthController } from './auth.controller';
-import { TestingModule, Test } from '@nestjs/testing';
+import type { LoginDto, SignupDto } from './auth.dto';
 import { AuthService } from './auth.service';
-import { LoginDto, SignupDto } from './auth.dto';
 
 const mockAuthService = {
   register: jest.fn(),

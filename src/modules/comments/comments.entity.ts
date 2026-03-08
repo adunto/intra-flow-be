@@ -48,7 +48,11 @@ export class Comment {
 
   // --- relations ---
 
-  @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(
+    () => Post,
+    (post) => post.comments,
+    { onDelete: 'CASCADE' },
+  )
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
@@ -56,7 +60,10 @@ export class Comment {
   @ApiProperty({ description: '게시물 ID' })
   postId: string;
 
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(
+    () => User,
+    (user) => user.comments,
+  )
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -66,10 +73,14 @@ export class Comment {
 
   // --- 대댓글 (Self Referencing) ---
 
-  @ManyToOne(() => Comment, (comment) => comment.children, {
-    nullable: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Comment,
+    (comment) => comment.children,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'parent_id' })
   parent: Comment;
 
@@ -77,6 +88,9 @@ export class Comment {
   @ApiProperty({ description: '부모 댓글 ID (대댓글일 경우)', required: false })
   parentId?: string;
 
-  @OneToMany(() => Comment, (comment) => comment.parent)
+  @OneToMany(
+    () => Comment,
+    (comment) => comment.parent,
+  )
   children: Comment[];
 }

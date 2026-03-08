@@ -3,15 +3,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Brackets, Repository, WhereExpressionBuilder } from 'typeorm';
-import { Post } from './posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  CreatePostDto,
-  SearchPostDto,
+  Brackets,
+  type Repository,
+  type WhereExpressionBuilder,
+} from 'typeorm';
+import {
+  type CreatePostDto,
+  type SearchPostDto,
   SearchType,
-  UpdatePostDto,
+  type UpdatePostDto,
 } from './posts.dto';
+import { Post } from './posts.entity';
 
 @Injectable()
 export class PostsService {

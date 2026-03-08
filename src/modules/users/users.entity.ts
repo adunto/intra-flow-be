@@ -1,3 +1,6 @@
+import { ChatRoomMember } from "@modules/messenger/chatRoomMember/chatRoomMember.entity";
+import { ApiProperty } from "@nestjs/swagger";
+import { UserRole } from "src/common/common.enums";
 import {
   Column,
   CreateDateColumn,
@@ -6,68 +9,83 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-import { Post } from '../posts/posts.entity';
+} from "typeorm";
+import { Comment } from "../comments/comments.entity";
+import { Like } from "../likes/likes.entity";
+import { Post } from "../posts/posts.entity";
 
-import { Comment } from '../comments/comments.entity';
-import { Like } from '../likes/likes.entity';
-import { UserRole } from 'src/common/common.enums';
-
-@Entity('users')
+@Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
-  @ApiProperty({ description: '사용자 ID', example: 1 })
+  @ApiProperty({ description: "사용자 ID", example: 1 })
   id: number;
 
   @Column({ unique: true })
-  @ApiProperty({ description: '사용자 EMAIL', example: 'user@example.com' })
+  @ApiProperty({ description: "사용자 EMAIL", example: "user@example.com" })
   email: string;
 
   @Column({ select: false }) // select : false -> 일반적인 조회(find) 시 비밀번호 노출 방지
-  @ApiProperty({ description: '사용자 PASSWORD', writeOnly: true })
+  @ApiProperty({ description: "사용자 PASSWORD", writeOnly: true })
   password: string;
 
   @Column({ length: 20 })
-  @ApiProperty({ description: '사용자 이름', example: '홍길동' })
+  @ApiProperty({ description: "사용자 이름", example: "홍길동" })
   username: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
   @ApiProperty({
-    description: '사용자 권한',
+    description: "사용자 권한",
     enum: UserRole,
     default: UserRole.USER,
   })
   role: UserRole;
 
   @Column({ nullable: true })
-  @ApiProperty({ description: '프로필 이미지 URL', required: false })
+  @ApiProperty({ description: "프로필 이미지 URL", required: false })
   profileImage?: string;
 
   // --- 타임 스탬프 ---
 
   @CreateDateColumn()
-  @ApiProperty({ description: '생성일' })
+  @ApiProperty({ description: "생성일" })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @ApiProperty({ description: '수정일' })
+  @ApiProperty({ description: "수정일" })
   updatedAt: Date;
 
   // --- Soft Delete ---
   @DeleteDateColumn()
-  @ApiProperty({ description: '삭제일', required: false })
+  @ApiProperty({ description: "삭제일", required: false })
   deletedAt?: Date | null;
 
+  // --- relations ---
+
   // --- 작성한 게시물 ---
-  @OneToMany(() => Post, (post) => post.user)
+  @OneToMany(
+    () => Post,
+    (post) => post.user,
+  )
   posts: Post[];
 
   // --- 작성한 댓글 ---
-  @OneToMany(() => Comment, (comment) => comment.user)
+  @OneToMany(
+    () => Comment,
+    (comment) => comment.user,
+  )
   comments: Comment[];
 
   // --- 좋아요 ---
-  @OneToMany(() => Like, (like) => like.user)
+  @OneToMany(
+    () => Like,
+    (like) => like.user,
+  )
   likes: Like[];
+
+  // 사용자[User] : 채팅 참여자[ChatRoomMember] (1:N)
+  @OneToMany(
+    () => ChatRoomMember,
+    (chatRoomMember) => chatRoomMember.user,
+  )
+  chatRoomMemberships: ChatRoomMember[];
 }

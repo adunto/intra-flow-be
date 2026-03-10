@@ -1,4 +1,3 @@
-import { User } from "@modules/users/users.entity";
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { User } from "../../users/users.entity";
 import { ChatMessage } from "../chatMessage/chatMessage.entity";
 import { ChatRoom } from "../chatRoom/chatRoom.entity";
 
@@ -25,7 +25,7 @@ export class ChatRoomMember {
 
   // 가장 최근에 읽은 메세지 ID
   @Column({ type: "bigint", name: "last_read_message_id", nullable: true })
-  lastReadMessageId: string;
+  lastReadMessageId?: string;
 
   // 참여 시간을 기준으로 이전 대화는 읽기 불가
   @CreateDateColumn({ name: "joined_at" })

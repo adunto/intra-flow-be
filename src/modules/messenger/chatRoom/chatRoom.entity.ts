@@ -9,7 +9,7 @@ import { ChatMessage } from "../chatMessage/chatMessage.entity";
 import { ChatRoomMember } from "../chatRoomMember/chatRoomMember.entity";
 
 // #####################
-// # 채팅방 
+// # 채팅방
 // #####################
 @Entity("chat_rooms")
 export class ChatRoom {

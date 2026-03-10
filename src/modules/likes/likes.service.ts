@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LikeTargetType } from "src/common/common.enums";
-import type { Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Comment } from "../comments/comments.entity";
 import { Post } from "../posts/posts.entity";
-import type { CreateLikeDto } from "./likes.dto";
+import { CreateLikeDto } from "./likes.dto";
 import { Like } from "./likes.entity";
 
 @Injectable()

@@ -5,9 +5,9 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Post } from "../posts/posts.entity";
-import type { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
+import { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
 import { Comment } from "./comments.entity";
 
 @Injectable()

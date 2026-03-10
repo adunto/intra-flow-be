@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { User } from "./users.entity";
 
 @Injectable()
@@ -12,7 +12,13 @@ export class UserService {
 
   // 모든 유저 찾기
   findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+      },
+    });
   }
 
   // ID 로 유저 찾기

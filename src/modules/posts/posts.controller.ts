@@ -19,14 +19,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { CurrentUser } from "src/common/decorators/user.decorator";
-import type { User } from "../users/users.entity";
-import type {
+import { User } from "../users/users.entity";
+import {
   CreatePostDto,
   PaginationDto,
   SearchPostDto,
   UpdatePostDto,
 } from "./posts.dto";
-import type { PostsService } from "./posts.service";
+import { PostsService } from "./posts.service";
 
 @ApiTags("Posts")
 @Controller("posts")

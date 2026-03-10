@@ -6,14 +6,14 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
-import type { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import type { Cache } from "cache-manager";
-import type { Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { User } from "../users/users.entity";
-import type { LoginDto, SignupDto } from "./auth.dto";
+import { LoginDto, SignupDto } from "./auth.dto";
 
 @Injectable()
 export class AuthService {

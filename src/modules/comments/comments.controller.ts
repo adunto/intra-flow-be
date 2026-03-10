@@ -18,9 +18,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { CurrentUser } from "src/common/decorators/user.decorator";
-import type { User } from "../users/users.entity";
-import type { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
-import type { CommentsService } from "./comments.service";
+import { User } from "../users/users.entity";
+import { CreateCommentDto, UpdateCommentDto } from "./comments.dto";
+import { CommentsService } from "./comments.service";
 
 @ApiTags("Comments")
 @Controller()

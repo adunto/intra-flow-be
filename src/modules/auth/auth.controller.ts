@@ -19,7 +19,7 @@ import {
 import type { Response } from "express";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import type { LoginDto, SignupDto } from "./auth.dto";
-import type { AuthService } from "./auth.service";
+import { AuthService } from "./auth.service";
 import type { ValidateUser } from "./jwt/jwt-refresh.strategy";
 
 @Controller("auth")

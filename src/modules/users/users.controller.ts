@@ -10,12 +10,22 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { Comment } from "../comments/comments.entity";
 import { Post } from "../posts/posts.entity";
 import { User } from "./users.entity";
-import type { UserService } from "./users.service";
+import { UserService } from "./users.service";
 
 @ApiTags("Users")
 @Controller("users")
 export class UsersController {
   constructor(private userService: UserService) {}
+
+  @ApiOperation({ summary: "메신저용 멤버 조회 (전체)" })
+  @ApiResponse({ status: 200, description: "조회 성공", type: [User] })
+  @ApiResponse({ status: 401, description: "인증되지 않음" })
+  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth()
+  @Get("users")
+  getAllUsers() {
+    return this.userService.findAll();
+  }
 
   // 유저 정보 조회 (GET)
   @ApiOperation({ summary: "내 정보 조회 (프로필)" })

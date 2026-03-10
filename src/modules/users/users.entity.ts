@@ -1,4 +1,3 @@
-import { ChatRoomMember } from "@modules/messenger/chatRoomMember/chatRoomMember.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { UserRole } from "src/common/common.enums";
 import {
@@ -12,6 +11,7 @@ import {
 } from "typeorm";
 import { Comment } from "../comments/comments.entity";
 import { Like } from "../likes/likes.entity";
+import { ChatRoomMember } from "../messenger/chatRoomMember/chatRoomMember.entity";
 import { Post } from "../posts/posts.entity";
 
 @Entity("users")

@@ -1,7 +1,7 @@
-import { Test, type TestingModule } from "@nestjs/testing";
-import type { Response } from "express";
+import { Test, TestingModule } from "@nestjs/testing";
+import { Response } from "express";
 import { AuthController } from "./auth.controller";
-import type { LoginDto, SignupDto } from "./auth.dto";
+import { LoginDto, SignupDto } from "./auth.dto";
 import { AuthService } from "./auth.service";
 
 const mockAuthService = {

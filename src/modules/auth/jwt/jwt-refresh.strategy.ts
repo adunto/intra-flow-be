@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
-import type { Request } from "express";
+import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import type { JwtPayload } from "./jwt.strategy";
+import { JwtPayload } from "./jwt.strategy";
 
 export type ValidateUser = JwtPayload & { refreshToken: string };
 

@@ -9,6 +9,7 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CommentsModule } from "./modules/comments/comments.module";
 import { LikesModule } from "./modules/likes/likes.module";
+import { MessengerModule } from "./modules/messenger/messenger.module";
 import { PostsModule } from "./modules/posts/posts.module";
 import { UsersModule } from "./modules/users/users.module";
 
@@ -78,6 +79,8 @@ import { UsersModule } from "./modules/users/users.module";
     PostsModule,
     CommentsModule,
     LikesModule,
+
+    MessengerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

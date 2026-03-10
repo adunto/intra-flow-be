@@ -14,9 +14,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { CurrentUser } from "src/common/decorators/user.decorator";
-import type { User } from "../users/users.entity";
-import type { CreateLikeDto } from "./likes.dto";
-import type { LikesService } from "./likes.service";
+import { User } from "../users/users.entity";
+import { CreateLikeDto } from "./likes.dto";
+import { LikesService } from "./likes.service";
 
 @ApiTags("Likes")
 @Controller()
